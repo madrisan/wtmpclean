@@ -1,0 +1,81 @@
+* Changes in wtmpclean 0.6.7 -- Davide Madrisan (Nov 06 2009)
+- Add ltype to utmpxlist structure.
+- wtmpxdump(): parse RUN_LVL records to find for system reboots and halts
+- Display "down" as logout time for all processes terminated by a system reboot/halt.
+- dumprecord(): correctly display login times with negative values.
+
+* Changes in wtmpclean 0.6.6 -- Davide Madrisan (Oct 29 2009)
+- The ut_id, and ut_addr_v6 fields are also filled up with null bytes when removing an entry.
+- The C locale is now used via setlocale precautionally.
+- Fixed the gcc warnings shown by '-Wall -Wextra'.
+- Better output in listening mode.
+- Made the variables of type local when possible.
+
+* Changes in wtmpclean 0.6.5 -- Davide Madrisan (Jan 15 2009)
+- wtmpxlist() has been renamed to wtmpxdump().
+- wtmpxdump(): Raw output highly improved.
+- wtmpxdump(): Dump all the db if no user is specified.
+- Always enable the `--raw' option (its code was previously in DEBUG blocks).
+- Return `1' if wtmpedit() fails.
+- Do not accept unknown fake users when patching the wtmp db.
+- Remove the option `--preserve': always preserve timestamps.
+- Declare the function `die()' as static and move its prototype to wtmpclean.c.
+
+* Changes in wtmpclean 0.6.4 -- Davide Madrisan (Dec 25 2008)
+- Now it's possible to replace a user in a given entry with another one.
+
+* Changes in wtmpclean 0.6.3 -- Davide Madrisan (Apr 25 2008)
+- Print the list of user sessions formatting the data as `last' does.
+- Fixed autoconf 2.62 warnings.
+- New option '-r' (or '--raw') for displaying the raw content of the wtmp db in DEBUG mode.
+- New option '-t' (or '--time') to delete a login occurred at a specified time.
+- Report "gone - no logout" instead of "still logged in" if the login process is not alive.
+
+* Changes in wtmpclean 0.6.2 -- Davide Madrisan (Mar 17 2008)
+- Define UTMPXNAME according to the build environment.
+- Moved DEFAULT_WTMP definitions to wtmpclean.h
+- In displaying mode print a list of all users logged in and out with session length.
+- Fixed compiler warnings on AIX.
+- Fixed compiler warnings with -pedantic -ansi.
+
+* Changes in wtmpclean 0.6.1 -- Davide Madrisan (Feb 14 2008)
+- Try using _PATH_WTMP (*BSD) or WTMP_FILE (AIX) if _PATH_WTMPX is undefined.
+- autoconf.ac: check for ut_addr_v6 in struct utp (at least AIX doesn't have it).
+- AIX: enable file selection if UTMP_DATA_INIT is defined.
+- AIX platform does not provide utmpxname so check for `utmpname'.
+
+* Changes in wtmpclean 0.6 -- Davide Madrisan (Feb 01 2008)
+- Added `-l|--list' option to list the <user> logins with terminal and date.
+- Removed `-t|--test' and `-u|--user' command-line options.
+- Switch to the analogous POSIX.1-2001 functions declared in <utmpx.h> to support non-Linux systems.
+- autoconf.ac: check if the non-POSIX function utmpxname is available.
+- Disable the `-f|--files' option if utmpxname is not available.
+- When cleaning up a block also fill with zeros `ut_host' and `ut_addr_v6'.
+
+* Changes in wtmpclean 0.5 -- Davide Madrisan (Jan 28 2008)
+- Support GNU command-line long options
+  (should compile even on non-GNU systems using a private copy).
+- Fail if the calling process can't access the file in write mode
+  (instead of saying: "0 blocks modified").
+- The help message have now a couple of usage examples.
+- wtmpedit() now returns the number of records cleaned up.
+
+* Changes in wtmpclean 0.4 -- Davide Madrisan (Jan 23 2008)
+- configure.ac: check for the utmp.h header file.
+- New option '-t' for testing whether a user is present or not in the wtmp db.
+- Filled README with some infos.
+- src/Makefile.am: wtmpclean marked as sbin_PROGRAMS.
+- do not clear the root blocks by default: `-u' is now mandatory.
+
+* Changes in wtmpclean 0.3 -- Davide Madrisan
+- Added the automake and autoconf stuff.
+- Added the files AUTHORS, ChangeLog, COPYING, INSTALL, NEWS, README.
+- Source and headers files moved to the subdir `src'.
+- Released under GPL version 3.
+
+* Changes in wtmpclean 0.2 -- Davide Madrisan
+- Source files re-indented with `indent -i4 -nut src/wtmpclean.c'.
+- New option '-p' (preserve ownership and timestamps).
+
+* Changes in wtmpclean 0.1 -- Davide Madrisan
+- First release.

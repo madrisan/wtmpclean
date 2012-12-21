@@ -1,0 +1,9 @@
+wtmpClean is a privacy protection tool for Unix which clears a given 
+user from the wtmp database.
+
+wtmpClean is written in ANSI C, making as few assumptions as possible,
+and sticking closely to ANSI C/POSIX.
+
+This software is OSI Certified Open Source Software and is distributed
+under the GNU General Public License version 3.
+See the file COPYING for more informations.

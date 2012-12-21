@@ -1,0 +1,78 @@
+New in 0.6.7:
+- When a login is terminated by a system halt or reboot print 'down' as logout time.
+- Correctly display login times with negative values.
+
+New in 0.6.6:
+- The cleaning of the wtmp records no longer leaves any trace, even in the raw output.
+- The listing of user logins was improved.
+
+New in 0.6.5:
+- The raw ('--raw') output was highly improved.
+- The whole wtmp database is dumped if no user is specified.
+- An error code of 1 is returned if the editing of the wtmp file fails.
+- Unknown fake users are not accepted when patching the wtmp file.
+- Timestamps are always preserved when editing the wtmp file (the '--preserve' option
+  has been removed).
+
+New in 0.6.4:
+- Now it's possible to replace a user logged at a given time or in all the records of
+  the wtmp batabase with another one.
+
+New in 0.6.3:
+- Print the list of user sessions formatting the data as `last' does.
+- New option '-t' (or '--time') to delete a login occurred at a specified time.
+- Report "gone - no logout" if the login process is not alive.
+
+New in 0.6.2:
+- Print the list of all users logged in and out with session length in `--list' mode.
+- Fixed all the gcc warnings when complitling with "-pedantic" and "-ansi" flags.
+
+New in 0.6.1:
+- configure: Check if the POSIX.1-2001 functions for managing utmp files are available.
+- Small changes to support the AIX platform.
+
+New in 0.6:
+- Added `-l|--list' option to list the <user> logins with terminal and date.
+- Removed `-t|--test' and `-u|--user' command-line options.
+- Use the POSIX.1-2001 functions declared in <utmpx.h> to support non-Linux systems.
+- When cleaning up a block also fill with zeros `ut_host' and `ut_addr_v6'.
+
+New in 0.5:
+- Support GNU command-line long options.
+- Fail if the calling process can't access the file in write mode.
+  (instead of saying: "0 blocks modified").
+- Better help message.
+
+New in 0.4:
+- New option `-t' for testing whether a user is present or not in the wtmp db.
+- Filled README with some informations about this projects.
+- Do not clear the root blocks by default: `-u' is now mandatory.
+
+New in 0.3:
+- Repackaged using the GNU autotools suite.
+- Released under GPL version 3.
+
+New in 0.2:
+- New option `-p' (preserve ownership and timestamps).
+
+New in 0.1:
+- First release.
+
+-----
+
+Copyright (C) 2008,2009 by Davide Madrisan <davide.madrisan@gmail.com>
+
+This file is part of wtmpclean.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
