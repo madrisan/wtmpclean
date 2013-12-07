@@ -1,3 +1,8 @@
+* Changes in wtmpclean ?.?.? -- Davide Madrisan (Dec 07 2013)
+- New output format for date and time in the raw dump mode.
+- Use the same output for date and time in both raw dump and edit mode.
+  (usability issue pointed out by Sebastian Thomas. Thanks!)
+
 * Changes in wtmpclean 0.6.7 -- Davide Madrisan (Nov 06 2009)
 - Add ltype to utmpxlist structure.
 - wtmpxdump(): parse RUN_LVL records to find for system reboots and halts

@@ -1,6 +1,6 @@
 /*
  * wtmpclean.c -- A tool for dumping wtmp files and patching wtmp records.
- * Copyright (C) 2008,2009 by Davide Madrisan <davide.madrisan@gmail.com>
+ * Copyright (C) 2008,2009,2013 by Davide Madrisan <davide.madrisan@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -90,9 +90,9 @@ usage (int status)
     static const char *usagemsg[] = {
         PACKAGE " version " PACKAGE_VERSION,
         "A tool for dumping wtmp files and patching wtmp records.",
-        "Copyright (C) 2008,2009 by Davide Madrisan <davide.madrisan@gmail.com>",
+        "Copyright (C) 2008,2009,2013 by Davide Madrisan <davide.madrisan@gmail.com>",
         "",
-        "Usage: " PACKAGE " [-l|-r] [-t YYYYMMDDHHMM]"
+        "Usage: " PACKAGE " [-l|-r] [-t \"YYYY.MM.DD HH:MM:SS\"]"
 #if defined(HAVE_UTMPXNAME) || defined(HAVE_UTMPNAME)
             " [-f <wtmpfile>]"
 #endif
@@ -107,7 +107,7 @@ usage (int status)
         "Samples:",
 #if defined(HAVE_UTMPXNAME) || defined(HAVE_UTMPNAME)
         "  ./" PACKAGE " --raw -f " DEFAULT_WTMP ".1 root",
-        "  ./" PACKAGE " -t 200809061430 jekyll hide",
+        "  ./" PACKAGE " -t \"2008.09.06 14:30:00\" jekyll hide",
 #else
         "  ./" PACKAGE " root",
 #endif
@@ -154,7 +154,7 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
     struct utimbuf currtime;
     uid_t owner;
     gid_t group;
-    time_t tm;
+    time_t ltime;
 
     if (access (wtmpfile, W_OK))
         die ("cannot access the file", errno);
@@ -170,7 +170,7 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
     UTMPXNAME (wtmpfile);
     setutxent ();
 
-    tm = mktime (logintime);
+    ltime = mktime (logintime);
 /*  if ((tm = mktime(&u)) == (time_t)-1)
  *        ...
  */
@@ -181,10 +181,7 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
           if (utp->ut_type == USER_PROCESS &&
               strncmp (utp->ut_user, user, sizeof utp->ut_user) == 0)
             {
-                if ((tm != (time_t) - 1) &&
-                    !((utp->ut_tv.tv_sec - (utp->ut_tv.tv_sec % 60) <= tm)
-                      && (tm <
-                          utp->ut_tv.tv_sec - (utp->ut_tv.tv_sec % 60) + 59)))
+                if (utp->ut_tv.tv_sec != ltime)
                     continue;
 
                 if (fake)
@@ -226,10 +223,10 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
 char *
 timetostr (const time_t time)
 {
-    static char s[29];    /* [Sun Sep 01 00:00:00 1998 PST] */
+    static char s[20];    /* [2008.09.06 14:30:00] */
 
     if (time != 0)
-        strftime(s, 29, "%a %b %d %T %Y %Z", localtime(&time));
+        strftime(s, 20, "%Y.%m.%d %H:%M:%S", localtime(&time));
     else
         s[0] = '\0';
 
@@ -306,7 +303,7 @@ wtmpxrawdump (const char *wtmpfile, const char *user)
 
           /*     line      id       host      addr       date&time */
           printf
-              (" [%-12.*s] [%-4.*s] [%-19.*s] [%-15.15s] [%-28.28s]\n",
+              (" [%-12.*s] [%-4.*s] [%-19.*s] [%-15.15s] [%-19.19s]\n",
                sizeof (utp->ut_line), utp->ut_line,
                sizeof (utp->ut_id), utp->ut_id,
                sizeof (utp->ut_host), utp->ut_host,
@@ -533,9 +530,9 @@ main (int argc, char **argv)
                 rawdump = 1;
                 break;
             case 't':
-                if (sscanf (optarg, "%4d%2d%2d%2d%2d",
-                            &u.tm_year, &u.tm_mon, &u.tm_mday, &u.tm_hour, &u.tm_min)
-                            != 5)
+                if (sscanf (optarg, "%4d.%2d.%2d %2d:%2d:%d",
+                            &u.tm_year, &u.tm_mon, &u.tm_mday, &u.tm_hour,
+                            &u.tm_min, &u.tm_sec) != 6)
                   {
                       fprintf (stderr, "%s: invalid time value \"%s\"\n",
                                basename (progname), optarg);
