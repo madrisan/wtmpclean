@@ -4,6 +4,7 @@
   (usability issue pointed out by Sebastian Thomas. Thanks!)
 - Add support for regular expressions in the editing mode.
 - Update the help message. 
+- Unify the error messages by using a single function: 'die()'.
 
 * Changes in wtmpclean 0.6.7 -- Davide Madrisan (Nov 06 2009)
 - Add ltype to utmpxlist structure.

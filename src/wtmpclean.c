@@ -58,6 +58,7 @@
 #include <pwd.h>         /* getpwnam */
 #include <regex.h>
 #include <signal.h>
+#include <stdarg.h>
 #include <time.h>
 #include <unistd.h>
 #include <utime.h>
@@ -81,7 +82,7 @@
 
 static char *progname;
 
-static void die (char *msg, int err);
+static void die (const char *fmt, ...);
 static void dumprecord (struct utmpxlist *p, int what);
 static void userchk (const char *usr);
 
@@ -129,9 +130,15 @@ usage (int status)
 }
 
 static void
-die (char *msg, int err)
+die (const char *fmt, ...)
 {
-    printf ("%s: %s: %s\n", basename (progname), msg, strerror (err));
+    va_list args;
+    
+    va_start (args, fmt);
+    fprintf (stderr, "%s: ", basename (progname));
+    vfprintf (stderr, fmt, args);
+    va_end (args);
+
     exit (EXIT_FAILURE);
 }
 
@@ -166,7 +173,7 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
 {
     static struct utmpx *utp;
     unsigned int cleanrec;
-    int rc; 
+    int rc;
     struct stat sb;
     struct utimbuf currtime;
     uid_t owner;
@@ -175,17 +182,15 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
     char msgbuf[100];
 
     if (access (wtmpfile, W_OK))
-        die ("cannot access the file", errno);
+        die ("cannot access the file: %s\n", strerror (errno));
 
     if (stat (wtmpfile, &sb))
-        die ("cannot get file status", errno);
+        die ("cannot get file status: %s\n", strerror (errno));
 
     if (rc = regcomp(&regex, timepattern, REG_EXTENDED | REG_NOSUB))
       {
           regerror(rc, &regex, msgbuf, sizeof(msgbuf));
-          fprintf(stderr, "%s: regcomp() failed: %s\n",
-                  basename (progname), msgbuf);
-          exit (EXIT_FAILURE);
+          die ("regcomp() failed: %s\n", msgbuf);
       }
 
     currtime.actime = sb.st_atime;
@@ -250,7 +255,7 @@ wtmpxrawdump (const char *wtmpfile, const char *user)
     char *addr_string, *time_string;
 
     if (access (wtmpfile, R_OK))
-        die ("cannot access the file", errno);
+        die ("cannot access the file: %s\n", strerror (errno));
 
     UTMPXNAME (wtmpfile);
     setutxent ();
@@ -391,7 +396,7 @@ wtmpxdump (const char *wtmpfile, const char *user)
     int down = 0;
 
     if (access (wtmpfile, R_OK))
-        die ("cannot access the file", errno);
+        die ("cannot access the file: %s\n", strerror (errno));
 
     UTMPXNAME (wtmpfile);
     setutxent ();
@@ -420,7 +425,7 @@ wtmpxdump (const char *wtmpfile, const char *user)
                 if (strncmp (utp->ut_user, user, sizeof utp->ut_user) == 0)
                   {
                       if ((p = malloc (sizeof (struct utmpxlist))) == NULL)
-                          die ("out of memory", errno);
+                          die ("out of memory: %s\n", strerror (errno));
 
                       memcpy (&p->ut, utp, sizeof (struct utmpx));
                       p->delta = 0;
