@@ -6,6 +6,7 @@
 - Update the help message. 
 - Unify the error messages by using a single function: 'die()'.
 - configure.ac: remove the obsolescent macro AC_HEADER_STDC
+- Reindent the code to use the formatting style consistently.
 
 * Changes in wtmpclean 0.6.7 -- Davide Madrisan (Nov 06 2009)
 - Add ltype to utmpxlist structure.

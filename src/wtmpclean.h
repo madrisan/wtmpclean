@@ -58,17 +58,17 @@
 # endif
 #endif
 
-#define SECINADAY (24*60*60)       /* seconds in a day */
+#define SECINADAY (24*60*60)    /* seconds in a day */
 
 /* Types of listing */
 #define R_NONE        0
-#define R_CRASH       1 /* No logout record, system boot in between */
-#define R_DOWN        2 /* System brought down in decent way */
-#define R_NORMAL      3 /* Normal */
-#define R_NOW         4 /* Still logged in */
-#define R_REBOOT      5 /* Reboot record. */
-#define R_PHANTOM     6 /* No logout record but session is stale. */
-#define R_TIMECHANGE  7 /* NEW_TIME or OLD_TIME */
+#define R_CRASH       1         /* No logout record, system boot in between */
+#define R_DOWN        2         /* System brought down in decent way */
+#define R_NORMAL      3         /* Normal */
+#define R_NOW         4         /* Still logged in */
+#define R_REBOOT      5         /* Reboot record. */
+#define R_PHANTOM     6         /* No logout record but session is stale. */
+#define R_TIMECHANGE  7         /* NEW_TIME or OLD_TIME */
 
 /* Double linked list of struct utmpx's */
 struct utmpxlist
@@ -83,7 +83,8 @@ struct utmpxlist
 void usage (int status);
 void wtmpxdump (const char *wtmpfile, const char *user);
 void wtmpxrawdump (const char *wtmpfile, const char *user);
-unsigned int wtmpedit (const char *wtmpfile, const char *user, const char *newuser,
-                       const char *timepattern, unsigned int *cleanerr);
+unsigned int wtmpedit (const char *wtmpfile, const char *user,
+                       const char *newuser, const char *timepattern,
+                       unsigned int *cleanerr);
 
 #endif /* WTMPCLEAN_H */
