@@ -56,6 +56,7 @@
 #include <errno.h>
 #include <locale.h>      /* setlocale */
 #include <pwd.h>         /* getpwnam */
+#include <regex.h>
 #include <signal.h>
 #include <time.h>
 #include <unistd.h>
@@ -108,6 +109,7 @@ usage (int status)
 #if defined(HAVE_UTMPXNAME) || defined(HAVE_UTMPNAME)
         "  ./" PACKAGE " --raw -f " DEFAULT_WTMP ".1 root",
         "  ./" PACKAGE " -t \"2008.09.06 14:30:00\" jekyll hide",
+        "  ./" PACKAGE " -t \"2013\\.12\\.?? 23:.*\" hide",
 #else
         "  ./" PACKAGE " root",
 #endif
@@ -144,23 +146,46 @@ userchk (const char *usr)
       }
 }
 
+char *
+timetostr (const time_t time)
+{
+    static char s[20];    /* [2008.09.06 14:30:00] */
+
+    if (time != 0)
+        strftime(s, 20, "%Y.%m.%d %H:%M:%S", localtime(&time));
+    else
+        s[0] = '\0';
+
+    return s;
+}
+
 unsigned int
 wtmpedit (const char *wtmpfile, const char *user, const char *fake,
-          struct tm *logintime, unsigned int *cleanerr)
+          const char *timepattern, unsigned int *cleanerr)
 {
     static struct utmpx *utp;
     unsigned int cleanrec;
+    int rc; 
     struct stat sb;
     struct utimbuf currtime;
     uid_t owner;
     gid_t group;
-    time_t ltime;
+    regex_t regex;
+    char msgbuf[100];
 
     if (access (wtmpfile, W_OK))
         die ("cannot access the file", errno);
 
     if (stat (wtmpfile, &sb))
         die ("cannot get file status", errno);
+
+    if (rc = regcomp(&regex, timepattern, REG_EXTENDED | REG_NOSUB))
+      {
+          regerror(rc, &regex, msgbuf, sizeof(msgbuf));
+          fprintf(stderr, "%s: regcomp() failed: %s\n",
+                  basename (progname), msgbuf);
+          exit (EXIT_FAILURE);
+      }
 
     currtime.actime = sb.st_atime;
     currtime.modtime = sb.st_mtime;
@@ -170,18 +195,13 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
     UTMPXNAME (wtmpfile);
     setutxent ();
 
-    ltime = mktime (logintime);
-/*  if ((tm = mktime(&u)) == (time_t)-1)
- *        ...
- */
-
     cleanrec = *cleanerr = 0;
     while ((utp = getutxent ()))
       {
           if (utp->ut_type == USER_PROCESS &&
               strncmp (utp->ut_user, user, sizeof utp->ut_user) == 0)
             {
-                if (utp->ut_tv.tv_sec != ltime)
+                if (regexec (&regex, timetostr (utp->ut_tv.tv_sec), (size_t) 0, NULL, 0))
                     continue;
 
                 if (fake)
@@ -211,6 +231,7 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
       }
 
     endutxent ();
+    regfree(&regex);
 
     if (chown (wtmpfile, owner, group) < 0)
           fprintf (stderr, "cannot preserve the ownership of the wtmp file");
@@ -218,19 +239,6 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
           fprintf (stderr, "cannot preserve access and modification times");
 
     return cleanrec;
-}
-
-char *
-timetostr (const time_t time)
-{
-    static char s[20];    /* [2008.09.06 14:30:00] */
-
-    if (time != 0)
-        strftime(s, 20, "%Y.%m.%d %H:%M:%S", localtime(&time));
-    else
-        s[0] = '\0';
-
-    return s;
 }
 
 void
@@ -471,13 +479,11 @@ int
 main (int argc, char **argv)
 {
     char *wtmpfile = getenv(DEFAULT_WTMP) ? : DEFAULT_WTMP;
-    char *user = NULL, *fake = NULL;
+    char *user = NULL, *fake = NULL, *timepattern = ".*";;
     unsigned char dump = 0, rawdump = 0, numeric = 0;
 
     int opt_index = 0;
     unsigned int cleanrec, cleanerr;
-
-    struct tm u = { 0 };
 
     setlocale(LC_ALL, "C");
 
@@ -530,18 +536,7 @@ main (int argc, char **argv)
                 rawdump = 1;
                 break;
             case 't':
-                if (sscanf (optarg, "%4d.%2d.%2d %2d:%2d:%d",
-                            &u.tm_year, &u.tm_mon, &u.tm_mday, &u.tm_hour,
-                            &u.tm_min, &u.tm_sec) != 6)
-                  {
-                      fprintf (stderr, "%s: invalid time value \"%s\"\n",
-                               basename (progname), optarg);
-                      exit (EXIT_FAILURE);
-                  }
-
-                u.tm_year -= 1900;
-                u.tm_mon -= 1;
-                u.tm_isdst = -1;
+                timepattern = optarg;
                 break;
             }
       }
@@ -570,7 +565,7 @@ main (int argc, char **argv)
       }
 
     userchk(user);
-    cleanrec = wtmpedit (wtmpfile, user, fake, &u, &cleanerr);
+    cleanrec = wtmpedit (wtmpfile, user, fake, timepattern, &cleanerr);
     if (cleanerr > 0)
       {
           fprintf (stderr, "%s: cannot clean up %s\n", progname, wtmpfile);

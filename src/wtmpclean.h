@@ -84,6 +84,6 @@ void usage (int status);
 void wtmpxdump (const char *wtmpfile, const char *user);
 void wtmpxrawdump (const char *wtmpfile, const char *user);
 unsigned int wtmpedit (const char *wtmpfile, const char *user, const char *newuser,
-                       struct tm *u, unsigned int *cleanerr);
+                       const char *timepattern, unsigned int *cleanerr);
 
 #endif /* WTMPCLEAN_H */
