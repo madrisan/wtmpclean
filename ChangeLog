@@ -3,6 +3,7 @@
 - Use the same output for date and time in both raw dump and edit mode.
   (usability issue pointed out by Sebastian Thomas. Thanks!)
 - Add support for regular expressions in the editing mode.
+- Update the help message. 
 
 * Changes in wtmpclean 0.6.7 -- Davide Madrisan (Nov 06 2009)
 - Add ltype to utmpxlist structure.

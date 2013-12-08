@@ -110,6 +110,7 @@ usage (int status)
         "  ./" PACKAGE " --raw -f " DEFAULT_WTMP ".1 root",
         "  ./" PACKAGE " -t \"2008.09.06 14:30:00\" jekyll hide",
         "  ./" PACKAGE " -t \"2013\\.12\\.?? 23:.*\" hide",
+        "  ./" PACKAGE " -f " DEFAULT_WTMP ".1 jekyll",
 #else
         "  ./" PACKAGE " root",
 #endif
