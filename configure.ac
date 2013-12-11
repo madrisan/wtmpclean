@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 AC_PREREQ(2.60)
-AC_INIT([wtmpclean], [0.8.8], [davide.madrisan@gmail.com])
+AC_INIT([wtmpclean], [0.8.0], [davide.madrisan@gmail.com])
 AC_COPYRIGHT([Copyright 2008,2009,2013 by Davide Madrisan <davide.madrisan@gmail.com>])
 
 AC_CONFIG_SRCDIR(src/wtmpclean.c)
