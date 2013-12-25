@@ -63,7 +63,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(sbindir)"
 PROGRAMS = $(sbin_PROGRAMS)
-am_wtmpclean_OBJECTS = wtmpclean.$(OBJEXT)
+am_wtmpclean_OBJECTS = wtmpclean.$(OBJEXT) wtmpxdump.$(OBJEXT) \
+	wtmpxrawdump.$(OBJEXT) wtmpedit.$(OBJEXT)
 wtmpclean_OBJECTS = $(am_wtmpclean_OBJECTS)
 wtmpclean_DEPENDENCIES = $(top_builddir)/src/missing/libmissing.a
 DEFAULT_INCLUDES = -I.@am__isrc@
@@ -219,7 +220,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/src \
               -I$(top_builddir)/src \
               -I$(top_builddir)
 
-wtmpclean_SOURCES = wtmpclean.c
+wtmpclean_SOURCES = wtmpclean.c wtmpxdump.c wtmpxrawdump.c wtmpedit.c
 EXTRA_DIST = wtmpclean.h getopt.h
 wtmpclean_LDADD = $(top_builddir)/src/missing/libmissing.a
 SUBDIRS = missing
@@ -324,6 +325,9 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wtmpclean.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wtmpedit.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wtmpxdump.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/wtmpxrawdump.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

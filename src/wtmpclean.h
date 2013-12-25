@@ -86,5 +86,7 @@ void wtmpxrawdump (const char *wtmpfile, const char *user);
 unsigned int wtmpedit (const char *wtmpfile, const char *user,
                        const char *newuser, const char *timepattern,
                        unsigned int *cleanerr);
+char *timetostr (const time_t time);
+void die (const char *fmt, ...);
 
 #endif /* WTMPCLEAN_H */

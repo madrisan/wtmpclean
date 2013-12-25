@@ -19,7 +19,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/src \
 
 sbin_PROGRAMS = wtmpclean
 
-wtmpclean_SOURCES = wtmpclean.c
+wtmpclean_SOURCES = wtmpclean.c wtmpxdump.c wtmpxrawdump.c wtmpedit.c
 EXTRA_DIST = wtmpclean.h getopt.h
 
 wtmpclean_LDADD = $(top_builddir)/src/missing/libmissing.a

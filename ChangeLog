@@ -1,3 +1,7 @@
+* Changes in wtmpclean ? -- Davide Madrisan (?)
+- Modularize the source code:
+  new files: src/wtmpedit.c, src/wtmpxdump.c, and src/wtmpxrawdump.c
+
 * Changes in wtmpclean 0.8.0 -- Davide Madrisan (Dec 10 2013)
 - New output format for date and time in the raw dump mode.
 - Use the same output for date and time in both raw dump and edit mode.
