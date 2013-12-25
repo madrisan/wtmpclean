@@ -26,8 +26,8 @@ This package uses GNU autotools for configuration and installation.
 
 Run `./configure --help` to see a list of available install options.
 
-It is highly likely that you will want to customise this location to
-suit your needs, i.e.:
+It is highly likely that you will want to customise the installation
+location to suit your needs, i.e.:
 
 	./configure --prefix=/usr
 
