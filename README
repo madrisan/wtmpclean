@@ -1,9 +1,13 @@
-wtmpClean is a privacy protection tool for Unix which clears a given 
-user from the wtmp database.
+wtmpclean is a tool for dumping wtmp files and patching wtmp records.
 
-wtmpClean is written in ANSI C, making as few assumptions as possible,
+wtmpclean is written in ANSI C, making as few assumptions as possible,
 and sticking closely to ANSI C/POSIX.
 
 This software is OSI Certified Open Source Software and is distributed
 under the GNU General Public License version 3.
 See the file COPYING for more informations.
+
+
+Some documentation URLs:
+http://www.gnu.org/software/libc/manual/html_node/XPG-Functions.html#XPG-Functions
+http://pubs.opengroup.org/onlinepubs/9699919799/functions/getutxent.html

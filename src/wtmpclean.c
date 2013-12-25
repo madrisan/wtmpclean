@@ -16,9 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* http://www.gnu.org/s/libc/manual/html_node/XPG-Functions.html#XPG-Functions 
- */
-
 /*
  * indent -i4 -nut src/wtmpclean.c
  */
