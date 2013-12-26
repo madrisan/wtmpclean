@@ -49,14 +49,6 @@
 #include <unistd.h>
 #include <signal.h>             /* kill */
 
-#ifdef HAVE_UTMPX_H
-# include <utmpx.h>
-#else
-# ifdef HAVE_UTMP_H
-#  include <utmp.h>
-# endif
-#endif
-
 #include "wtmpclean.h"
 
 static void
@@ -115,19 +107,19 @@ void
 wtmpxdump (const char *wtmpfile, const char *user)
 {
     struct utmpxlist *p, *curr = NULL, *next, *utmpxlist = NULL;
-    struct utmpx *utp;
+    STRUCT_UTMP *utp;
     char runlevel;
     int down = 0;
 
     if (access (wtmpfile, R_OK))
         die ("cannot access the file: %s\n", strerror (errno));
 
-    UTMPXNAME (wtmpfile);
-    setutxent ();
+    UTMP_NAME_FUNCTION (wtmpfile);
+    SET_UTMP_ENT ();
 
-    while ((utp = getutxent ()))
+    while ((utp = GET_UTMP_ENT ()))
       {
-          /*if (user && strncmp (utp->ut_user, user, sizeof utp->ut_user))
+          /*if (user && strncmp (UT_USER (utp), user, sizeof utp->ut_user))
              continue; */
 
           switch (utp->ut_type)
@@ -135,7 +127,7 @@ wtmpxdump (const char *wtmpfile, const char *user)
             default:
                 break;
             case RUN_LVL:
-                runlevel = utp->ut_pid % 256;
+                runlevel = (UT_PID (utp) % 256);
                 if ((runlevel == '0') || (runlevel == '6'))
                     down = 1;
                 break;
@@ -146,12 +138,12 @@ wtmpxdump (const char *wtmpfile, const char *user)
                 /*
                  * Just store the data if it is interesting enough.
                  */
-                if (strncmp (utp->ut_user, user, sizeof utp->ut_user) == 0)
+                if (strncmp (UT_USER (utp), user, sizeof (UT_USER (utp))) == 0)
                   {
                       if ((p = malloc (sizeof (struct utmpxlist))) == NULL)
                           die ("out of memory: %s\n", strerror (errno));
 
-                      memcpy (&p->ut, utp, sizeof (struct utmpx));
+                      memcpy (&p->ut, utp, sizeof (STRUCT_UTMP));
                       p->delta = 0;
                       p->ltype = R_NONE;
                       p->next = NULL;
@@ -177,8 +169,8 @@ wtmpxdump (const char *wtmpfile, const char *user)
                           (p->ut.ut_line, utp->ut_line, sizeof utp->ut_line))
                           continue;
 
-                      p->eos = utp->ut_tv.tv_sec;
-                      p->delta = utp->ut_tv.tv_sec - p->ut.ut_tv.tv_sec;
+                      p->eos = UT_TIME_MEMBER (utp);
+                      p->delta = UT_TIME_MEMBER (utp) - p->ut.ut_tv.tv_sec;
                       p->ltype = (down ? R_DOWN : R_NORMAL);
                   }
                 break;
@@ -203,5 +195,5 @@ wtmpxdump (const char *wtmpfile, const char *user)
           free (p);
       }
 
-    endutxent ();
+    END_UTMP_ENT ();
 }

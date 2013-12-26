@@ -52,14 +52,6 @@
 #include <unistd.h>
 #include <utime.h>
 
-#ifdef HAVE_UTMPX_H
-# include <utmpx.h>
-#else
-# ifdef HAVE_UTMP_H
-#  include <utmp.h>
-# endif
-#endif
-
 #include "wtmpclean.h"
 
 char *
@@ -78,19 +70,19 @@ timetostr (const time_t time)
 void
 wtmpxrawdump (const char *wtmpfile, const char *user)
 {
-    struct utmpx *utp;
+    STRUCT_UTMP *utp;
     struct in_addr addr;
     char *addr_string, *time_string;
 
     if (access (wtmpfile, R_OK))
         die ("cannot access the file: %s\n", strerror (errno));
 
-    UTMPXNAME (wtmpfile);
-    setutxent ();
+    UTMP_NAME_FUNCTION (wtmpfile);
+    SET_UTMP_ENT ();
 
-    while ((utp = getutxent ()))
+    while ((utp = GET_UTMP_ENT ()))
       {
-          if (user && strncmp (utp->ut_user, user, sizeof utp->ut_user))
+          if (user && strncmp (UT_USER (utp), user, sizeof (UT_USER (utp))))
               continue;
 
           /* FIXME: missing support for IPv6 */
@@ -99,7 +91,7 @@ wtmpxrawdump (const char *wtmpfile, const char *user)
 #endif
 
           addr_string = inet_ntoa (addr);
-          time_string = timetostr (utp->ut_tv.tv_sec);
+          time_string = timetostr (UT_TIME_MEMBER (utp));
 
           switch (utp->ut_type)
             {
@@ -127,7 +119,7 @@ wtmpxrawdump (const char *wtmpfile, const char *user)
                 printf ("%-9s", "LOGIN");
                 break;
             case USER_PROCESS:
-                printf ("%-9.*s", sizeof (utp->ut_user), utp->ut_user);
+                printf ("%-9.*s", sizeof (UT_USER (utp)), UT_USER (utp));
                 break;
             case DEAD_PROCESS:
                 printf ("%-9s", "DEAD");
@@ -141,8 +133,8 @@ wtmpxrawdump (const char *wtmpfile, const char *user)
             }
 
           /* pid */
-          utp->ut_pid ? printf ("[%05d]", utp->ut_pid) : printf ("[%5s]",
-                                                                 "-");
+          UT_PID (utp) ? printf ("[%05d]", UT_PID (utp)) : printf ("[%5s]",
+                                                                   "-");
 
           /*     line      id       host      addr       date&time */
           printf
@@ -153,5 +145,5 @@ wtmpxrawdump (const char *wtmpfile, const char *user)
 
       }
 
-    endutxent ();
+    END_UTMP_ENT ();
 }

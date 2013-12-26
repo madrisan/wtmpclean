@@ -92,7 +92,7 @@ usage (int status)
 #endif
             " <user> [<fake>]",
 #if defined(HAVE_UTMPXNAME) || defined(HAVE_UTMPNAME)
-        "  -f, --file       Modify <wtmpfile> instead of " DEFAULT_WTMP,
+        "  -f, --file       Modify <wtmpfile> instead of " WTMP_FILE,
 #endif
         "  -l, --list       Show listing of <user> logins",
         "  -r, --raw        Show the raw content of the wtmp database",
@@ -100,10 +100,10 @@ usage (int status)
         "",
         "Samples:",
 #if defined(HAVE_UTMPXNAME) || defined(HAVE_UTMPNAME)
-        "  ./" PACKAGE " --raw -f " DEFAULT_WTMP ".1 root",
+        "  ./" PACKAGE " --raw -f " WTMP_FILE ".1 root",
         "  ./" PACKAGE " -t \"2008.09.06 14:30:00\" jekyll hide",
         "  ./" PACKAGE " -t \"2013\\.12\\.?? 23:.*\" hide",
-        "  ./" PACKAGE " -f " DEFAULT_WTMP ".1 jekyll",
+        "  ./" PACKAGE " -f " WTMP_FILE ".1 jekyll",
 #else
         "  ./" PACKAGE " root",
 #endif
@@ -149,7 +149,7 @@ userchk (const char *usr)
 int
 main (int argc, char **argv)
 {
-    char *wtmpfile = getenv (DEFAULT_WTMP) ? : DEFAULT_WTMP;
+    char *wtmpfile = getenv (WTMP_FILE) ? : WTMP_FILE;
     char *user = NULL, *fake = NULL, *timepattern = ".*";;
     unsigned char dump = 0, rawdump = 0, numeric = 0;
 

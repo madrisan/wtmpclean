@@ -30,19 +30,50 @@ AC_ISC_POSIX
 
 AC_HEADER_TIME
 
-AC_CHECK_HEADERS([errno.h utmp.h utmpx.h])
+AC_CHECK_HEADERS_ONCE([errno.h utmp.h utmpx.h])
+if test $ac_cv_header_utmp_h = yes || test $ac_cv_header_utmpx_h = yes; then
+  AC_CHECK_FUNC([utmpxname],
+     [AC_DEFINE(HAVE_UTMPXNAME, 1,
+                [Define to 1 to if you have the non-POSIX function utmpxname.])])
+  AC_CHECK_FUNC([utmpname],
+     [AC_DEFINE(HAVE_UTMPNAME, 1,
+                [Define to 1 to if you have the non-POSIX function utmpname.])])
+  AC_CHECK_DECLS([getutent],,,[[
+/* <sys/types.h> is a prerequisite of <utmp.h> on FreeBSD 8.0, OpenBSD 4.6.  */
+#include <sys/types.h>
+#ifdef HAVE_UTMP_H
+# include <utmp.h>
+#endif
+]])
+    utmp_includes="\
+AC_INCLUDES_DEFAULT
+#ifdef HAVE_UTMPX_H
+# include <utmpx.h>
+#endif
+#ifdef HAVE_UTMP_H
+# if defined _THREAD_SAFE && defined UTMP_DATA_INIT
+   /* When including both utmp.h and utmpx.h on AIX 4.3, with _THREAD_SAFE
+      defined, work around the duplicate struct utmp_data declaration.  */
+#  define utmp_data gl_aix_4_3_workaround_utmp_data
+# endif
+# include <utmp.h>
+#endif
+"
+  AC_CHECK_MEMBERS([struct utmpx.ut_user],,,[$utmp_includes])
+  AC_CHECK_MEMBERS([struct utmp.ut_user],,,[$utmp_includes])
+  AC_CHECK_MEMBERS([struct utmpx.ut_name],,,[$utmp_includes])
+  AC_CHECK_MEMBERS([struct utmp.ut_name],,,[$utmp_includes])
+  AC_CHECK_MEMBERS([struct utmpx.ut_type],,,[$utmp_includes])
+  AC_CHECK_MEMBERS([struct utmp.ut_type],,,[$utmp_includes])
+  AC_CHECK_MEMBERS([struct utmpx.ut_pid],,,[$utmp_includes])
+  AC_CHECK_MEMBERS([struct utmp.ut_pid],,,[$utmp_includes])
+fi
 
-AC_CHECK_FUNC([getutxent],[],
-   [AC_MSG_ERROR([this system is not POSIX.1-2001 compliant])])
-#AC_CHECK_FUNC([getutxent],
-#   [AC_DEFINE(HAVE_UTMPXPOSIX, 1,
-#              [Define to 1 to if you have the POSIX function for managing utmpx databases.])])
-AC_CHECK_FUNC([utmpxname],
-   [AC_DEFINE(HAVE_UTMPXNAME, 1,
-              [Define to 1 to if you have the non-POSIX function utmpxname.])])
-AC_CHECK_FUNC([utmpname],
-   [AC_DEFINE(HAVE_UTMPNAME, 1,
-              [Define to 1 to if you have the non-POSIX function utmpname.])])
+#AC_CHECK_FUNC([getutxent],[],
+#   [AC_MSG_ERROR([this system is not POSIX.1-2001 compliant])])
+AC_CHECK_FUNC([getutxent],
+   [AC_DEFINE(HAVE_UTMPXPOSIX, 1,
+              [Define to 1 to if you have the POSIX function for managing utmpx databases.])])
 
 # note: utp.ut_addr_v6 is only available on Linux
 AC_CACHE_CHECK(

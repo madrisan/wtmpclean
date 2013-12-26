@@ -52,21 +52,13 @@
 #include <unistd.h>
 #include <utime.h>
 
-#ifdef HAVE_UTMPX_H
-# include <utmpx.h>
-#else
-# ifdef HAVE_UTMP_H
-#  include <utmp.h>
-# endif
-#endif
-
 #include "wtmpclean.h"
 
 unsigned int
 wtmpedit (const char *wtmpfile, const char *user, const char *fake,
           const char *timepattern, unsigned int *cleanerr)
 {
-    static struct utmpx *utp;
+    STRUCT_UTMP *utp;
     unsigned int cleanrec;
     int rc;
     struct stat sb;
@@ -93,22 +85,22 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
     owner = sb.st_uid;
     group = sb.st_gid;
 
-    UTMPXNAME (wtmpfile);
-    setutxent ();
+    UTMP_NAME_FUNCTION (wtmpfile);
+    SET_UTMP_ENT ();
 
     cleanrec = *cleanerr = 0;
-    while ((utp = getutxent ()))
+    while ((utp = GET_UTMP_ENT ()))
       {
           if (utp->ut_type == USER_PROCESS &&
-              strncmp (utp->ut_user, user, sizeof utp->ut_user) == 0)
+              strncmp (UT_USER (utp), user, sizeof (UT_USER (utp))) == 0)
             {
                 if (regexec
-                    (&regex, timetostr (utp->ut_tv.tv_sec), (size_t) 0, NULL,
+                    (&regex, timetostr (UT_TIME_MEMBER (utp)), (size_t) 0, NULL,
                      0))
                     continue;
 
                 if (fake)
-                    strncpy (utp->ut_user, fake, sizeof utp->ut_user);
+                    strncpy (UT_USER (utp), fake, sizeof (UT_USER (utp)));
                 else
                   {
                       /* Simulates the job of init when a process has exited:
@@ -119,11 +111,11 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
                        * DEAD [11735] [pts/0] [    ] [        ] [0.0.0.0 ] [Mon Jan 12 17:31:24 2009 CET]
                        */
                       utp->ut_type = DEAD_PROCESS;
-                      memset (utp->ut_user, 0, sizeof utp->ut_user);
+                      memset (UT_USER (utp), 0, sizeof (UT_USER (utp)));
                       memset (utp->ut_id, 0, sizeof utp->ut_id);
                       memset (utp->ut_host, 0, sizeof utp->ut_host);
                       memset (utp->ut_addr_v6, 0, sizeof utp->ut_addr_v6);
-                      /*utp->ut_tv.tv_sec = utp->ut_tv.tv_usec = 0; */
+                      /*UT_TIME_MEMBER (utp) = utp->ut_tv.tv_usec = 0; */
                   }
 
                 if (pututxline (utp))
@@ -133,7 +125,7 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
             }
       }
 
-    endutxent ();
+    END_UTMP_ENT ();
     regfree (&regex);
 
     if (chown (wtmpfile, owner, group) < 0)
