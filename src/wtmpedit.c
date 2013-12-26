@@ -118,7 +118,7 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
                       /*UT_TIME_MEMBER (utp) = utp->ut_tv.tv_usec = 0; */
                   }
 
-                if (pututxline (utp))
+                if (PUT_UTMP_LINE (utp))
                     cleanrec++;
                 else
                     cleanerr++;

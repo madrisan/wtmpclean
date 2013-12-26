@@ -38,6 +38,7 @@
 #  define SET_UTMP_ENT setutxent
 #  define GET_UTMP_ENT getutxent
 #  define END_UTMP_ENT endutxent
+#  define PUT_UTMP_LINE pututxline
 #  ifdef HAVE_UTMPXNAME
 #   define UTMP_NAME_FUNCTION utmpxname
 #  endif
@@ -50,6 +51,7 @@
 #  define SET_UTMP_ENT setutent
 #  define GET_UTMP_ENT getutent
 #  define END_UTMP_ENT endutent
+#  define PUT_UTMP_LINE pututline
 #  ifdef HAVE_UTMPNAME
 #   define UTMP_NAME_FUNCTION utmpname
 #  endif
