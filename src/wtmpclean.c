@@ -76,8 +76,6 @@
 
 static char *progname;
 
-static void userchk (const char *usr);
-
 /*
  *	Get the basename of a filename
  */

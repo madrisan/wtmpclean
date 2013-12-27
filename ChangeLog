@@ -5,6 +5,7 @@
 - Portability enhancements on operating systems that do not provide 'utmpx.h'.
 - Remove unnecessary files.
 " New function 'mybasename'.
+- wtmpclean.c: avoid forward declarations.
 
 * Changes in wtmpclean 0.8.0 -- Davide Madrisan (Dec 10 2013)
 - New output format for date and time in the raw dump mode.
