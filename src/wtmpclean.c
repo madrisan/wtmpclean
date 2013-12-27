@@ -78,6 +78,20 @@ static char *progname;
 
 static void userchk (const char *usr);
 
+/*
+ *	Get the basename of a filename
+ */
+static char *mybasename(char *s)
+{
+    char *p;
+
+    if ((p = strrchr(s, '/')) != NULL)
+        p++;
+    else
+        p = s;
+    return p;
+}
+
 void
 usage (int status)
 {
@@ -127,7 +141,7 @@ die (const char *fmt, ...)
     va_list args;
 
     va_start (args, fmt);
-    fprintf (stderr, "%s: ", basename (progname));
+    fprintf (stderr, "%s: ", mybasename (progname));
     vfprintf (stderr, fmt, args);
     va_end (args);
 
