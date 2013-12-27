@@ -114,10 +114,15 @@ wtmpxdump (const char *wtmpfile, const char *user)
     if (access (wtmpfile, R_OK))
         die ("cannot access the file: %s\n", strerror (errno));
 
+    /* Ignore the return value for now.
+       Solaris' utmpname returns 1 upon success -- which is contrary
+       to what the GNU libc version does.  In addition, older GNU libc
+       versions are actually void.   */
     UTMP_NAME_FUNCTION (wtmpfile);
+
     SET_UTMP_ENT ();
 
-    while ((utp = GET_UTMP_ENT ()))
+    while ((utp = GET_UTMP_ENT ()) != NULL)
       {
           /*if (user && strncmp (UT_USER (utp), user, sizeof utp->ut_user))
              continue; */
@@ -177,6 +182,8 @@ wtmpxdump (const char *wtmpfile, const char *user)
             }
       }
 
+    END_UTMP_ENT ();
+
     for (p = utmpxlist; p; p = next)
       {
           next = p->next;
@@ -194,6 +201,4 @@ wtmpxdump (const char *wtmpfile, const char *user)
           dumprecord (p, p->ltype);
           free (p);
       }
-
-    END_UTMP_ENT ();
 }
