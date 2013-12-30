@@ -158,6 +158,6 @@ unsigned int wtmpedit (const char *wtmpfile, const char *user,
                        const char *newuser, const char *timepattern,
                        unsigned int *cleanerr);
 char *timetostr (const time_t time);
-void die (const char *fmt, ...) __attribute__ ((noreturn));
+void die (int err_no, const char *fmt, ...) __attribute__ ((noreturn));
 
 #endif /* WTMPCLEAN_H */

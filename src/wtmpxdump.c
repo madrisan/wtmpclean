@@ -112,7 +112,7 @@ wtmpxdump (const char *wtmpfile, const char *user)
     int down = 0;
 
     if (access (wtmpfile, R_OK))
-        die ("cannot access the file: %s\n", strerror (errno));
+        die (errno, "cannot access the file");
 
     /* Ignore the return value for now.
        Solaris' utmpname returns 1 upon success -- which is contrary
@@ -146,7 +146,7 @@ wtmpxdump (const char *wtmpfile, const char *user)
                 if (strncmp (UT_USER (utp), user, sizeof (UT_USER (utp))) == 0)
                   {
                       if ((p = malloc (sizeof (struct utmpxlist))) == NULL)
-                          die ("out of memory: %s\n", strerror (errno));
+                          die (errno, "out of memory");
 
                       memcpy (&p->ut, utp, sizeof (STRUCT_UTMP));
                       p->delta = 0;

@@ -134,13 +134,17 @@ usage (int status)
 }
 
 void
-die (const char *fmt, ...)
+die (int err_no, const char *fmt, ...)
 {
     va_list args;
 
     va_start (args, fmt);
     fprintf (stderr, "%s: ", mybasename (progname));
     vfprintf (stderr, fmt, args);
+    if (err_no)
+        fprintf(stderr, ": %s\n", strerror(err_no));
+    else
+        putc('\n', stderr);
     va_end (args);
 
     exit (EXIT_FAILURE);

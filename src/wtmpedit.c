@@ -69,15 +69,15 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
     char msgbuf[100];
 
     if (access (wtmpfile, W_OK))
-        die ("cannot access the file: %s\n", strerror (errno));
+        die (errno, "cannot access the file");
 
     if (stat (wtmpfile, &sb))
-        die ("cannot get file status: %s\n", strerror (errno));
+        die (errno, "cannot get file status");
 
     if (rc = regcomp (&regex, timepattern, REG_EXTENDED | REG_NOSUB))
       {
           regerror (rc, &regex, msgbuf, sizeof (msgbuf));
-          die ("regcomp() failed: %s\n", msgbuf);
+          die (0, "regcomp() failed: %s", msgbuf);
       }
 
     currtime.actime = sb.st_atime;

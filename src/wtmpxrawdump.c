@@ -75,7 +75,7 @@ wtmpxrawdump (const char *wtmpfile, const char *user)
     char *addr_string, *time_string;
 
     if (access (wtmpfile, R_OK))
-        die ("cannot access the file: %s\n", strerror (errno));
+        die (errno, "cannot access the file");
 
     /* Ignore the return value for now.
        Solaris' utmpname returns 1 upon success -- which is contrary
