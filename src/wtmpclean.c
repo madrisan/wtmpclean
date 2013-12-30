@@ -176,7 +176,7 @@ main (int argc, char **argv)
 
     setlocale (LC_ALL, "C");
 
-    progname = argv[0] ? mybasename (argv[0]) : PACKAGE_NAME;
+    progname = argv[0] ? mybasename (argv[0]) : PACKAGE;
     opterr = 0;
 
     while (1)
