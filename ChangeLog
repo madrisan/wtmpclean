@@ -4,7 +4,7 @@
 - Rework the documentation files.
 - Portability enhancements on operating systems that do not provide 'utmpx.h'.
 - Remove unnecessary files.
-" New function 'mybasename'.
+- New function 'mybasename'.
 - wtmpclean.c: avoid forward declarations.
 - wtmpclean.h: mark the function die with the attribute noreturn.
 
