@@ -138,13 +138,15 @@ die (int err_no, const char *fmt, ...)
 {
     va_list args;
 
+    fflush (NULL);
+
     va_start (args, fmt);
     fprintf (stderr, "%s: ", progname);
     vfprintf (stderr, fmt, args);
     if (err_no)
-        fprintf(stderr, ": %s\n", strerror(err_no));
+        fprintf (stderr, ": %s\n", strerror (err_no));
     else
-        putc('\n', stderr);
+        putc ('\n', stderr);
     va_end (args);
 
     exit (EXIT_FAILURE);

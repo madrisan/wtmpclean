@@ -9,6 +9,8 @@
 - wtmpclean.h: mark the function 'die' with the attribute noreturn.
 - Generalize the function 'die' by adding an argument for the last error number.
 - wtmpclean.c: execute 'mybasename' only once.
+- wtmpclean.c: die(): flush all the streams to ensure message integrity if stderr is
+  shared with other programs.
 
 * Changes in wtmpclean 0.8.0 -- Davide Madrisan (Dec 10 2013)
 - New output format for date and time in the raw dump mode.
