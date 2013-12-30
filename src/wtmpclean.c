@@ -74,7 +74,7 @@
 #include "wtmpclean.h"
 #include "getopt.h"
 
-static char *progname;
+static const char *progname;
 
 /*
  *	Get the basename of a filename
@@ -139,7 +139,7 @@ die (int err_no, const char *fmt, ...)
     va_list args;
 
     va_start (args, fmt);
-    fprintf (stderr, "%s: ", mybasename (progname));
+    fprintf (stderr, "%s: ", progname);
     vfprintf (stderr, fmt, args);
     if (err_no)
         fprintf(stderr, ": %s\n", strerror(err_no));
@@ -174,7 +174,7 @@ main (int argc, char **argv)
 
     setlocale (LC_ALL, "C");
 
-    progname = argv[0];
+    progname = argv[0] ? mybasename (argv[0]) : PACKAGE_NAME;
     opterr = 0;
 
     while (1)
