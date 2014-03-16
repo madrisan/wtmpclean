@@ -103,6 +103,7 @@ AC_CHECK_DECLS([getopt])
 
 AC_CHECK_TOOL(LD,ld,ld,$PATH)
 AC_CHECK_TOOL(AR,ar,ar,$PATH)
+AM_PROG_AR
 AC_PROG_RANLIB
 
 AC_CONFIG_HEADERS(src/config.h:src/config.hin)
