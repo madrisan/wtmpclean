@@ -24,6 +24,8 @@
 # include "config.h"
 #endif
 
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #ifdef HAVE_SYS_TYPES_H
 # include <sys/types.h>
@@ -167,7 +169,16 @@ userchk (const char *usr)
 int
 main (int argc, char **argv)
 {
-    char *wtmpfile = getenv (WTMP_FILE) ? : WTMP_FILE;
+    char *wtmpfile =
+#ifdef HAVE___SECURE_GETENV
+    __secure_getenv (WTMP_FILE) ? : WTMP_FILE;
+#else
+# ifdef HAVE_SECURE_GETENV
+    secure_getenv (WTMP_FILE) ? : WTMP_FILE;
+# else
+    getenv (WTMP_FILE) ? : WTMP_FILE;
+# endif
+#endif
     char *user = NULL, *fake = NULL, *timepattern = ".*";;
     unsigned char dump = 0, rawdump = 0, numeric = 0;
 

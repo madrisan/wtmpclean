@@ -1,3 +1,6 @@
+New in -.-.-:
+- Prefer __secure_getenv/secure_getenv over getenv when available.
+
 New in 0.8.0:
 - Add support for regular expressions in the editing mode (see help).
 - Use the same output for date and time in both raw dump and edit mode.

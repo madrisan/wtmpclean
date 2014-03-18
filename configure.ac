@@ -72,6 +72,11 @@ AC_CHECK_FUNC([getutxent],
    [AC_DEFINE(HAVE_UTMPXPOSIX, 1,
               [Define to 1 to if you have the POSIX function for managing utmpx databases.])])
 
+AC_CHECK_FUNCS([\
+   __secure_getenv \
+     secure_getenv\
+])
+
 # note: utp.ut_addr_v6 is only available on Linux
 AC_CACHE_CHECK(
    [for ut_addr_v6 in struct utp],
