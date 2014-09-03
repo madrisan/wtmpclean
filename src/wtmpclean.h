@@ -22,6 +22,8 @@
 # include <config.h>
 #endif
 
+#define _GNU_SOURCE
+
 # if HAVE_UTMPX_H
 #  if HAVE_UTMP_H
     /* HPUX 10.20 needs utmp.h, for the definition of e.g., UTMP_FILE.  */
