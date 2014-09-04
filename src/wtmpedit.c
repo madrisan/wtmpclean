@@ -129,9 +129,9 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
     regfree (&regex);
 
     if (chown (wtmpfile, owner, group) < 0)
-        fprintf (stderr, "cannot preserve the ownership of the wtmp file");
+        fprintf (stderr, "cannot preserve the ownership of the wtmp file\n");
     if (utime (wtmpfile, &currtime) < 0)
-        fprintf (stderr, "cannot preserve access and modification times");
+        fprintf (stderr, "cannot preserve access and modification times\n");
 
     return cleanrec;
 }
