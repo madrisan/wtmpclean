@@ -68,9 +68,6 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
     regex_t regex;
     char msgbuf[100];
 
-    if (access (wtmpfile, W_OK))
-        die (errno, "cannot access the file");
-
     if (stat (wtmpfile, &sb))
         die (errno, "cannot get file status");
 
@@ -88,6 +85,7 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
     UTMP_NAME_FUNCTION (wtmpfile);
     SET_UTMP_ENT ();
 
+    errno = 0;
     cleanrec = *cleanerr = 0;
     while ((utp = GET_UTMP_ENT ()))
       {
@@ -124,6 +122,8 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
                     cleanerr++;
             }
       }
+    if (errno)
+        die (errno, "error while accessing the wtmp file");
 
     END_UTMP_ENT ();
     regfree (&regex);
