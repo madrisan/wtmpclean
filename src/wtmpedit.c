@@ -68,15 +68,19 @@ wtmpedit (const char *wtmpfile, const char *user, const char *fake,
     regex_t regex;
     char msgbuf[100];
 
-    if (stat (wtmpfile, &sb))
-        die (errno, "cannot get file status");
-
     if (rc = regcomp (&regex, timepattern, REG_EXTENDED | REG_NOSUB))
       {
           regerror (rc, &regex, msgbuf, sizeof (msgbuf));
           die (0, "regcomp() failed: %s", msgbuf);
       }
 
+    if (lstat (wtmpfile, &sb) == -1)
+        die (errno, "cannot get file status");
+    if (!S_ISREG (sb.st_mode))
+        die (errno, "the wtmp file is not a regular file");
+
+    if (stat (wtmpfile, &sb) == -1)
+        die (errno, "cannot get file status");
     currtime.actime = sb.st_atime;
     currtime.modtime = sb.st_mtime;
     owner = sb.st_uid;
