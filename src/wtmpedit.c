@@ -1,6 +1,6 @@
 /*
  * wtmpclean.c -- A tool for dumping wtmp files and patching wtmp records.
- * Copyright (C) 2008,2009,2013 by Davide Madrisan <davide.madrisan@gmail.com>
+ * Copyright (C) 2008,2009,2013-2014 by Davide Madrisan <davide.madrisan@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
