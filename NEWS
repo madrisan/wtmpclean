@@ -1,5 +1,8 @@
-New in -.-.-:
+New in 0.8.1:
 - Prefer __secure_getenv/secure_getenv over getenv when available.
+- Avoid the use of the function 'access()' because it can lead to a time-of-check,
+  time-of-use race condition.
+- Minor fixes.
 
 New in 0.8.0:
 - Add support for regular expressions in the editing mode (see help).
