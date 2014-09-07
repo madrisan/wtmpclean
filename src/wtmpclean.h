@@ -22,7 +22,9 @@
 # include <config.h>
 #endif
 
-#define _GNU_SOURCE
+#ifndef __USE_GNU
+# define __USE_GNU	1
+#endif
 
 # if HAVE_UTMPX_H
 #  if HAVE_UTMP_H
@@ -161,5 +163,7 @@ unsigned int wtmpedit (const char *wtmpfile, const char *user,
                        unsigned int *cleanerr);
 char *timetostr (const time_t time);
 void die (int err_no, const char *fmt, ...) __attribute__ ((noreturn));
+
+#undef __USE_GNU
 
 #endif /* WTMPCLEAN_H */
