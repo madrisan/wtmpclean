@@ -1,4 +1,4 @@
-* Changes in wtmpclean ? -- Davide Madrisan (?)
+* Changes in wtmpclean 0.8.1 -- Davide Madrisan (Sep 09 2014)
 - Modularize the source code:
   new files: src/wtmpedit.c, src/wtmpxdump.c, and src/wtmpxrawdump.c
 - Rework the documentation files.
@@ -9,8 +9,12 @@
 - wtmpclean.h: mark the function 'die' with the attribute noreturn.
 - Generalize the function 'die' by adding an argument for the last error number.
 - wtmpclean.c: execute 'mybasename' only once.
-- wtmpclean.c: die(): flush all the streams to ensure message integrity if stderr is
-  shared with other programs.
+- wtmpclean.c: die(): flush all the streams to ensure message integrity
+- Prefer 'secure_getenv' or '__secure_getenv' to 'getenv' when available
+- wtmpedit.c: avoid the use of the 'access()' function because it can lead to a
+  time-of-check, time-of-use race condition.
+- wtmpedit.c: exit with error if <wtmpfile> is not a regular file.
+- configure: switch to the silent mode build.
 
 * Changes in wtmpclean 0.8.0 -- Davide Madrisan (Dec 10 2013)
 - New output format for date and time in the raw dump mode.
