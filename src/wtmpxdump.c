@@ -62,7 +62,8 @@ dumprecord (struct utmpxlist *p, int what)
     printf ("%-8.8s %-12.12s %-16.16s ",
             p->ut.ut_user, p->ut.ut_line, p->ut.ut_host);
 
-    ct = ctime (&p->ut.ut_tv.tv_sec);
+    time_t time = p->ut.ut_tv.tv_sec;
+    ct = ctime (&time);
     printf ("%10.10s %4.4s %5.5s ", ct, ct + 20, ct + 11);
 
     mins = (p->delta / 60) % 60;
