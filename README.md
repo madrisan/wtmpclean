@@ -15,10 +15,21 @@ Where
 
 Examples
 
-	wtmpclean --raw -f /var/log/wtmp.1 root
-	wtmpclean -t "2008.09.06 14:30:00" jekyll hide
-	wtmpclean -t "2013\.12\.?? 23:.*" hide
-	wtmpclean -f /var/log/wtmp.1 jekyll
+	# dump the wtmp records of a given user (`jekyll')
+	wtmpclean -f /var/log/wtmp.1 -l jekyll
+	  jekyll   tty2                          Mon May 14 2018 20:24 - 20:24  (00:00)
+	wtmpclean -f /var/log/wtmp.1 --raw jekyll
+	  jekyll   [03539] [tty2        ] [tty2] [                   ] [0.0.0.0        ] [2018.05.14 20:24:08]
+
+	# replace a single record, using a regular expression
+	wtmpclean -f /var/log/wtmp.1 -t "2018\.05\.14 20:.*" jekyll nosuchuser
+	  > wtmpclean: unknown/bad user `nosuchuser'
+	wtmpclean -f /var/log/wtmp.1 -t "2018\.05\.?? 20:.*" jekyll hide
+	  > /var/log/wtmp.1: 1 block(s) logging user `jekyll' now belong to user `hide'.
+
+	# remove all the occurrences of the user `hide'
+	wtmpclean -f /var/log/wtmp.1 hide
+	  > /var/log/wtmp.1: patched 3 block(s) logging user `hide'.
 
 ## Installation
 
