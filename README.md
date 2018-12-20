@@ -27,11 +27,11 @@ This package uses GNU autotools for configuration and installation.
 It is highly likely that you will want to customise the installation
 location to suit your needs, i.e.:
 
-	autoreconf && ./configure --prefix=/usr
+	autoreconf && ./configure --prefix=/usr/local
 
-Run `./configure --help` to see a list of available install options.
+Run `./configure --help` to see a list of available options.
 
-After `./configure` has completed successfully run `make install` and
+After `./configure` has completed successfully run `sudo make install` and
 you're done!
 
 ## Supported Platforms
@@ -41,7 +41,7 @@ sticking closely to ANSI C/POSIX.
 
 This is a list of platforms this nagios plugin is known to compile and run on
 
-* Linux (with kernel 3.6 and glibc 2.16.0)
+* Linux (glibc version 2.16.0 and 2.28)
 
 ## Some documentation
 
