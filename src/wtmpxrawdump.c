@@ -55,12 +55,16 @@
 #include "wtmpclean.h"
 
 char *
-timetostr (const time_t time)
+timetostr (const time_t rawtime)
 {
     static char s[20];          /* [2008.09.06 14:30:00] */
+    struct tm tminfo;
 
-    if (time != 0)
-        strftime (s, 20, "%Y.%m.%d %H:%M:%S", localtime (&time));
+    if (rawtime != 0)
+      {
+          localtime_r (&rawtime, &tminfo);
+          strftime (s, sizeof (s), "%Y.%m.%d %H:%M:%S", &tminfo);
+      }
     else
         s[0] = '\0';
 
@@ -144,9 +148,9 @@ wtmpxrawdump (const char *wtmpfile, const char *user)
           /*     line      id       host      addr       date&time */
           printf
               (" [%-12.*s] [%-4.*s] [%-19.*s] [%-15.15s] [%-19.19s]\n",
-               sizeof (utp->ut_line), utp->ut_line,
-               sizeof (utp->ut_id), utp->ut_id,
-               sizeof (utp->ut_host), utp->ut_host, addr_string, time_string);
+               UT_LINESIZE, utp->ut_line,
+               (int)sizeof (utp->ut_id), utp->ut_id,
+               UT_HOSTSIZE, utp->ut_host, addr_string, time_string);
 
       }
 

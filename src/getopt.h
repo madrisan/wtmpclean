@@ -19,10 +19,7 @@
    02111-1307 USA.  */
 
 #ifndef _GETOPT_H
-
-#ifndef __need_getopt
 # define _GETOPT_H 1
-#endif
 
 /* If __GNU_LIBRARY__ is not already defined, either we are being used
    standalone, or this is the first header included in the source file.
@@ -170,8 +167,5 @@ extern int getopt_long_only (int ___argc, char *const *___argv,
 #ifdef	__cplusplus
 }
 #endif
-
-/* Make sure we later can get all the definitions and declarations.  */
-#undef __need_getopt
 
 #endif /* getopt.h */

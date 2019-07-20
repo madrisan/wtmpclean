@@ -55,6 +55,7 @@ static void
 dumprecord (struct utmpxlist *p, int what)
 {
     char *ct;
+    char buf[26];
     char logintime[32];
     char length[32];
     int mins, hours, days;
@@ -63,7 +64,7 @@ dumprecord (struct utmpxlist *p, int what)
             p->ut.ut_user, p->ut.ut_line, p->ut.ut_host);
 
     time_t time = p->ut.ut_tv.tv_sec;
-    ct = ctime (&time);
+    ct = ctime_r (&time, buf);
     printf ("%10.10s %4.4s %5.5s ", ct, ct + 20, ct + 11);
 
     mins = (p->delta / 60) % 60;
@@ -98,7 +99,7 @@ dumprecord (struct utmpxlist *p, int what)
           break;
       case R_NORMAL:
       default:
-          ct = ctime (&p->eos);
+          ct = ctime_r (&p->eos, buf);
           sprintf (logintime, "- %5.5s ", ct + 11);
       }
     printf ("%s%s\n", logintime, length);
